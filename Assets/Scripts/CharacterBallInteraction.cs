@@ -29,6 +29,7 @@ public class CharacterBallInteraction : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Debug.Log("Distance: "+ Vector3.Distance(transform.position,hoopPos.position));
         if (holdingBall && Input.GetButtonDown("Fire1"))
         {
             transform.LookAt(hoopPos);
