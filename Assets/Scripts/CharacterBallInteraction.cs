@@ -10,11 +10,13 @@ public class CharacterBallInteraction : MonoBehaviour
     public bool holdingBall;
     public Rigidbody ball;
     public Transform hoopPos;
-    public Transform aboveRim;
-    public float shootingAbility;
-    public float rotateAmount = -1000f;
-    public float shootingTime = 1f;
-    public float shootingCurve = 3f;
+    private CharacterAnimationController _characterAnimationController;
+
+    private void Start()
+    {
+        _characterAnimationController = GetComponent<CharacterAnimationController>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag($"Ball"))
@@ -30,46 +32,12 @@ public class CharacterBallInteraction : MonoBehaviour
             holdingBall = true;
         }
     }
-
     private void FixedUpdate()
     {
-        Debug.Log("Distance: "+ Vector3.Distance(transform.position,hoopPos.position));
         if (holdingBall && Input.GetButtonDown("Fire1"))
         {
             transform.LookAt(hoopPos);
-            GetComponent<CharacterAnimationController>().PlayJumpShot();
+            _characterAnimationController.PlayJumpShot();
         }
-    }
-
-    IEnumerator OpenCollider()
-    {
-        yield return new WaitForEndOfFrame();
-        ball.GetComponent<SphereCollider>().isTrigger = false;
-    }
-
-    public void JumpShot()
-    {
-        ball.GetComponent<Ball>().isTakeable = false;
-        ball.GetComponent<Ball>().OpenTakeAble();
-        StartCoroutine(OpenCollider());
-        Transform ballT = ball.transform;
-        ballT.parent = null;
-        ball.isKinematic = false;
-
-        ballT.LookAt(aboveRim);
-        var aboveRimPos = aboveRim.position;
-        var sequence = DOTween.Sequence()
-            .Append(ball.transform.DOMoveX(aboveRimPos.x + Random.Range(-1f, 1f) / shootingAbility, shootingTime)
-                .SetEase(Ease.Linear))
-            .Join(ball.transform.DOMoveZ(aboveRimPos.z + Random.Range(-1f, 1f) / shootingAbility, shootingTime)
-                .SetEase(Ease.Linear))
-            .Join(ball.transform.DOMoveY(aboveRimPos.y + shootingCurve, shootingTime / 2f).OnComplete(() =>
-            {
-                ball.transform.DOMoveY(aboveRim.position.y, shootingTime / 2f).SetEase(Ease.InSine);
-            }).SetEase(Ease.OutSine))
-            .Join(ball.transform.DORotate(new Vector3(rotateAmount,0,0), shootingTime).SetEase(Ease.InOutCubic)
-                .SetRelative(true));
-        
-        holdingBall = false;
     }
 }
