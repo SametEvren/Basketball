@@ -17,4 +17,4 @@ MonoBehaviour:
   shootBallMoveTime: 1.5
   shootArc: 4.5
   ballSpinWhileMoving: 2000
-  shootingAbility: 10
+  shootingAbility: 5

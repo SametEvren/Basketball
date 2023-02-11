@@ -11,6 +11,7 @@ public class CharacterAnimationController : MonoBehaviour
     private static readonly int Run = Animator.StringToHash("Run");
     private static readonly int JumpRebound = Animator.StringToHash("JumpRebound");
     private static readonly int JumpShot = Animator.StringToHash("JumpShot");
+    private static readonly int Pass = Animator.StringToHash("Pass");
 
     public void PlayIdle()
     {
@@ -41,5 +42,10 @@ public class CharacterAnimationController : MonoBehaviour
     public void PlayJumpShot()
     {
         animator.SetTrigger(JumpShot);
+    }
+
+    public void PlayPass()
+    {
+        animator.SetTrigger(Pass);
     }
 }

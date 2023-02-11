@@ -43,6 +43,38 @@ public class CharacterBallActions : MonoBehaviour
         
         GetComponent<CharacterBallInteraction>().holdingBall = false;
     }
+
+    public void PassTheBall()
+    {
+        GameManager gameManager = GameManager.Instance;
+        var ball = gameManager.ball;
+        var ballT = ball.transform;
+        var ballRigid = ball.GetComponent<Rigidbody>();
+        
+        ball.isTakeable = false;
+        ball.OpenTakeAble();
+        StartCoroutine(OpenCollider(ball.GetComponent<SphereCollider>()));
+        ballT.parent = null;
+        ballRigid.isKinematic = false;
+        var sequence = DOTween.Sequence()
+            .Append(ball.transform.DOMove(
+                TeamManager.Instance.teamMembers[TeamManager.Instance.playerIndex].transform.position, 0.5f));
+        
+        for (int i = 0; i < TeamManager.Instance.teamMembers.Count; i++)
+        {
+            TeamManager.Instance.teamMembers[i].GetComponent<CharacterMovement>().enabled = false;
+        }
+
+        TeamManager.Instance.teamMembers[TeamManager.Instance.playerIndex].GetComponent<CharacterMovement>().enabled =
+            true;
+
+        gameManager.cinemachineFreeLook.Follow = TeamManager.Instance.teamMembers[TeamManager.Instance.playerIndex].transform;
+        gameManager.cinemachineFreeLook.LookAt = TeamManager.Instance.teamMembers[TeamManager.Instance.playerIndex].transform;
+        
+        GetComponent<CharacterBallInteraction>().holdingBall = false;
+
+       
+    }
     
     IEnumerator OpenCollider(SphereCollider ballCollider)
     {

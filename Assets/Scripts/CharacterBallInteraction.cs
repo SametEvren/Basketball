@@ -11,6 +11,7 @@ public class CharacterBallInteraction : MonoBehaviour
     public Rigidbody ball;
     public Transform hoopPos;
     private CharacterAnimationController _characterAnimationController;
+    
 
     private void Start()
     {
@@ -38,6 +39,16 @@ public class CharacterBallInteraction : MonoBehaviour
         {
             transform.LookAt(hoopPos);
             _characterAnimationController.PlayJumpShot();
+        }
+
+        if (holdingBall && Input.GetButtonDown("Fire2"))
+        {
+            if (TeamManager.Instance.playerIndex < TeamManager.Instance.teamMembers.Count - 1) TeamManager.Instance.playerIndex++;
+            else TeamManager.Instance.playerIndex = 0;
+
+
+                transform.LookAt(TeamManager.Instance.teamMembers[TeamManager.Instance.playerIndex].transform);
+            _characterAnimationController.PlayPass();
         }
     }
 }
